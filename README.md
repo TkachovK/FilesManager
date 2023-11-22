@@ -17,4 +17,5 @@ To build and run the website docker image, run `docker-compose up -d --build`.
 Add these variables with your data to .env file.
 
 REACT_APP_API_URL =
+
 REACT_APP_CLIENT_URL =
