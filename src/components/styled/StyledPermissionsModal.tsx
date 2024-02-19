@@ -1,18 +1,19 @@
 import { useState } from 'react'
+import DeleteIcon from '@mui/icons-material/Delete'
 import {
   Alert as MuiAlert,
-  TextField,
-  Button,
-  Typography,
   Box,
-  Select,
-  MenuItem,
-  SelectChangeEvent,
-  InputAdornment,
+  Button,
   IconButton,
+  InputAdornment,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  TextField,
+  Typography,
 } from '@mui/material'
-import DeleteIcon from '@mui/icons-material/Delete'
-import { PermissionsProps, PermissionsModalProps } from '../../interfaces/folder'
+
+import { PermissionsModalProps, PermissionsProps } from '../../interfaces/folder'
 
 const Alert = (props: any) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -35,7 +36,7 @@ const StyledPermissionsModal: React.FC<PermissionsModalProps> = ({
 
   const handleAddEmail = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    const isUniqueEmail = emailActions.filter((obj) => obj.email === inputText.trim())
+    const isUniqueEmail = emailActions.filter(obj => obj.email === inputText.trim())
     const isValidEmail = emailRegex.test(inputText.trim()) && isUniqueEmail.length === 0
     setIsValidEmail(isValidEmail)
 
@@ -78,17 +79,19 @@ const StyledPermissionsModal: React.FC<PermissionsModalProps> = ({
     }))
   }
 
-  const handleCopyLink = () => {
-    copyToClipboard(`${process.env.REACT_APP_CLIENT_URL}/shared/${accessLink.linkedType}/${accessLink.link}`)
-  }
-
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text)
   }
 
+  const handleCopyLink = () => {
+    copyToClipboard(`${process.env.REACT_APP_CLIENT_URL}/shared/${accessLink.linkedType}/${accessLink.link}`)
+  }
+
   return (
     <>
-      <Typography variant="h6" fontWeight={800} sx={{ mr: '10px', mb: '10px' }}>Users with access</Typography>
+      <Typography variant="h6" fontWeight={800} sx={{ mr: '10px', mb: '10px' }}>
+        Users with access
+      </Typography>
       <Box mb={1} display="flex" alignItems="baseline">
         <TextField
           label="Enter Email"
@@ -103,18 +106,16 @@ const StyledPermissionsModal: React.FC<PermissionsModalProps> = ({
           }}
           onChange={handleInputChange}
         />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleAddEmail}
-          sx={{ width: '80px', marginLeft: '10px' }}
-        >
+        <Button variant="contained" color="primary" onClick={handleAddEmail} sx={{ width: '80px', marginLeft: '10px' }}>
           Add
         </Button>
       </Box>
       <Box>
         {emailActions.map((emailAction, index) => (
-          <Box key={index} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+          <Box
+            key={index}
+            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}
+          >
             <Typography variant="body1" sx={{ mr: '16px' }}>
               {emailAction.email}
             </Typography>
@@ -126,7 +127,7 @@ const StyledPermissionsModal: React.FC<PermissionsModalProps> = ({
               <Box>
                 <Select
                   value={emailAction.action}
-                  onChange={(e) => handleActionChange(index, e)}
+                  onChange={e => handleActionChange(index, e)}
                   variant="outlined"
                   sx={{ width: '100px' }}
                 >
@@ -142,11 +143,13 @@ const StyledPermissionsModal: React.FC<PermissionsModalProps> = ({
         ))}
       </Box>
 
-      <Typography variant="h6" fontWeight={800} sx={{ marginRight: '10px' }}>General access</Typography>
+      <Typography variant="h6" fontWeight={800} sx={{ marginRight: '10px' }}>
+        General access
+      </Typography>
       <Box mt={1} display="flex" alignItems="baseline">
         <Select
           value={accessLink.disabled ? 'disabled' : 'enabled'}
-          onChange={(e) => handleToggleAccessLink(e)}
+          onChange={e => handleToggleAccessLink(e)}
           variant="outlined"
           sx={{ width: '250px' }}
         >
@@ -157,19 +160,14 @@ const StyledPermissionsModal: React.FC<PermissionsModalProps> = ({
           <Box mt={2} display="flex" alignItems="baseline">
             <Select
               value={accessLink.access}
-              onChange={(e) => handleAccessLinkChange(e)}
+              onChange={e => handleAccessLinkChange(e)}
               variant="outlined"
               sx={{ width: '150px', ml: '10px' }}
             >
               <MenuItem value="view">View</MenuItem>
               <MenuItem value="edit">Edit</MenuItem>
             </Select>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleCopyLink}
-              sx={{ width: '120px', ml: '10px' }}
-            >
+            <Button variant="contained" color="primary" onClick={handleCopyLink} sx={{ width: '120px', ml: '10px' }}>
               Copy link
             </Button>
           </Box>

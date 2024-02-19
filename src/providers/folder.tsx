@@ -1,6 +1,7 @@
 import { createContext, useContext, useState } from 'react'
-import { FolderProps } from '../interfaces/folder'
+
 import { ProviderProps } from '../interfaces/auth'
+import { FolderProps } from '../interfaces/folder'
 
 interface FolderContextProps {
   rootFolder: FolderProps | null

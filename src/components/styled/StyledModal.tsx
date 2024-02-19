@@ -1,5 +1,5 @@
 import { cloneElement } from 'react'
-import { Button, Box, Modal, Typography } from '@mui/material'
+import { Box, Button, Modal, Typography } from '@mui/material'
 
 interface ModalProps {
   title: string
@@ -31,22 +31,14 @@ const StyledModal: React.FC<ModalProps> = ({
         boxShadow: 24,
       }}
     >
-      <Typography
-        variant="h5"
-        sx={{ textAlign: 'center', borderBottom: '1px solid black' }}
-      >
+      <Typography variant="h5" sx={{ textAlign: 'center', borderBottom: '1px solid black' }}>
         {title}
       </Typography>
       <Box sx={{ p: 4 }}>
         {cloneElement(inputComponent as React.ReactElement)}
         <Box sx={{ mt: 6, display: 'flex', justifyContent: 'center' }}>
           {buttonNames.map((buttonName, index) => (
-            <Button
-              key={index}
-              variant="contained"
-              onClick={index === 0 ? onSave : onClose}
-              sx={{ mr: 2 }}
-            >
+            <Button key={index} variant="contained" onClick={index === 0 ? onSave : onClose} sx={{ mr: 2 }}>
               {buttonName}
             </Button>
           ))}

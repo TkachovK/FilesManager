@@ -1,9 +1,11 @@
 import { useEffect } from 'react'
-import Folder from './folder/Folder'
-import File from './file/File'
-import { getAvailableFolders } from '../../services/folders'
-import { useFolderContext } from '../../providers/folder'
+
 import { useAuth } from '../../providers/auth'
+import { useFolderContext } from '../../providers/folder'
+import { getAvailableFolders } from '../../services/folders'
+
+import File from './file/File'
+import Folder from './folder/Folder'
 
 const FilesManager: React.FC<{ shared?: boolean }> = ({ shared }) => {
   const { user } = useAuth()

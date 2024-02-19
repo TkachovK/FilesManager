@@ -1,6 +1,6 @@
-import AuthProvider from "./providers/auth"
-import FolderProvider from "./providers/folder"
-import Routes from "./routes"
+import AuthProvider from './providers/auth'
+import FolderProvider from './providers/folder'
+import Routes from './routes'
 
 function App() {
   return (

@@ -1,7 +1,8 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
-import { Box, Typography, List, ListItem, ListItemText, IconButton, FormControlLabel, Switch } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
+import { Box, FormControlLabel, IconButton, List, ListItem, ListItemText, Switch, Typography } from '@mui/material'
+
 import { FileUploadFormProps } from '../../interfaces/folder'
 
 const StyledFileInput: React.FC<FileUploadFormProps> = ({ setUploadedFiles, checked, onChange }) => {
@@ -11,22 +12,25 @@ const StyledFileInput: React.FC<FileUploadFormProps> = ({ setUploadedFiles, chec
     onChange(event.target.checked)
   }
 
-  const onDrop = useCallback(async (acceptedFiles: File[]) => {
-    const files: File[] = []
-    const formData = new FormData()
+  const onDrop = useCallback(
+    async (acceptedFiles: File[]) => {
+      const files: File[] = []
+      const formData = new FormData()
 
-    acceptedFiles.map(async (file) => {
-      try {
-        formData.append('file', file)
-        files.push(file)
-      } catch (error) {
-        console.error('Error uploading file:', error)
-      }
-    })
+      acceptedFiles.map(async file => {
+        try {
+          formData.append('file', file)
+          files.push(file)
+        } catch (error) {
+          console.error('Error uploading file:', error)
+        }
+      })
 
-    setUploadedUrls([...uploadedFiles, ...files])
-    setUploadedFiles(formData)
-  }, [setUploadedUrls, setUploadedFiles])
+      setUploadedUrls([...uploadedFiles, ...files])
+      setUploadedFiles(formData)
+    },
+    [setUploadedUrls, setUploadedFiles]
+  )
 
   const handleRemoveFile = (index: number) => {
     const updatedFiles = [...uploadedFiles]
@@ -51,10 +55,7 @@ const StyledFileInput: React.FC<FileUploadFormProps> = ({ setUploadedFiles, chec
   return (
     <>
       <Box>
-        <FormControlLabel
-          control={<Switch checked={checked} onChange={handleChange} />}
-          label="Is Public"
-        />
+        <FormControlLabel control={<Switch checked={checked} onChange={handleChange} />} label="Is Public" />
       </Box>
       <Box display="flex" justifyContent="center" alignItems="center" height="200px">
         <div {...getRootProps()} style={dropzoneStyle}>

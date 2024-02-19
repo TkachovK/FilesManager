@@ -1,28 +1,26 @@
-import {
-  BrowserRouter as Router,
-  Routes as ReactRouterRoutes,
-  Route,
-} from "react-router-dom"
-import { useAuth } from "../providers/auth"
-import { ProtectedRoute } from "./ProtectedRoute"
-import Login from "../pages/login/Login"
-import Landing from "../pages/landing/Landing"
-import Dashboard from "../pages/dashboard/Dashboard"
-import SharedFolder from "../pages/shared/SharedFolder"
-import SharedFile from "../pages/shared/SharedFile"
-import Page404 from "../pages/404/404"
-import Header from "../components/header/Header"
+import { BrowserRouter as Router, Route, Routes as ReactRouterRoutes } from 'react-router-dom'
+
+import Header from '../components/header/Header'
+import Page404 from '../pages/404/404'
+import Dashboard from '../pages/dashboard/Dashboard'
+import Landing from '../pages/landing/Landing'
+import Login from '../pages/login/Login'
+import SharedFile from '../pages/shared/SharedFile'
+import SharedFolder from '../pages/shared/SharedFolder'
+import { useAuth } from '../providers/auth'
+
+import { ProtectedRoute } from './ProtectedRoute'
 
 const Routes: React.FC = () => {
   const { user, token } = useAuth()
 
   const routesForAuthenticated = [
     {
-      path: "",
+      path: '',
       element: <ProtectedRoute />,
       children: [
         {
-          path: "",
+          path: '',
           element: <Dashboard />,
         },
       ],
@@ -31,26 +29,26 @@ const Routes: React.FC = () => {
 
   const routesForNotAuthenticated = [
     {
-      path: "",
+      path: '',
       element: <Login />,
     },
     {
-      path: "/landing",
+      path: '/landing',
       element: <Landing />,
     },
   ]
 
   const routesForAll = [
     {
-      path: "/shared/folders/:id",
+      path: '/shared/folders/:id',
       element: <SharedFolder />,
     },
     {
-      path: "/shared/files/:id",
+      path: '/shared/files/:id',
       element: <SharedFile />,
     },
     {
-      path: "*",
+      path: '*',
       element: <Page404 />,
     },
   ]
@@ -58,11 +56,9 @@ const Routes: React.FC = () => {
   return (
     <Router>
       <ReactRouterRoutes>
-        {
-          routesForAll.map((route, index) => (
-            <Route key={index} path={route.path} element={route.element} />
-          ))
-        }
+        {routesForAll.map((route, index) => (
+          <Route key={index} path={route.path} element={route.element} />
+        ))}
         {!token &&
           routesForNotAuthenticated.map((route, index) => (
             <Route key={index} path={route.path} element={route.element} />
@@ -72,11 +68,7 @@ const Routes: React.FC = () => {
             <Route key={index} path={route.path} element={route.element}>
               {route.children &&
                 route.children.map((childRoute, childIndex) => (
-                  <Route
-                    key={childIndex}
-                    path={childRoute.path}
-                    element={childRoute.element}
-                  />
+                  <Route key={childIndex} path={childRoute.path} element={childRoute.element} />
                 ))}
             </Route>
           ))}
