@@ -1,9 +1,7 @@
-import FilesManager from "../../components/files-manager/FilesManager"
+import FilesManager from '../../components/files-manager/FilesManager'
 
 const Dashboard = () => {
-  return (
-    <FilesManager />
-  )
+  return <FilesManager />
 }
 
 export default Dashboard

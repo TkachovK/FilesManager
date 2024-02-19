@@ -1,7 +1,5 @@
-import NotFound from "../../components/not-found/NotFound"
+import NotFound from '../../components/not-found/NotFound'
 
-const Page404: React.FC = () => (
-  <NotFound />
-)
+const Page404: React.FC = () => <NotFound />
 
 export default Page404

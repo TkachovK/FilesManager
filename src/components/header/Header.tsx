@@ -1,16 +1,24 @@
+import { useCallback, useEffect, useState } from 'react'
 import { Box, Grid } from '@mui/material'
+
+import { AuthUserProps } from '../../interfaces/auth'
+import { FileProps, FolderProps } from '../../interfaces/folder'
+import { useFolderContext } from '../../providers/folder'
 import StyledSearchInput from '../styled/StyledSearchInput'
 import UserProfile from '../user-profile/UserProfile'
-import { AuthUserProps } from '../../interfaces/auth'
-import { useFolderContext } from '../../providers/folder'
-import { useCallback, useEffect, useState } from 'react'
-import { FileProps, FolderProps } from '../../interfaces/folder'
 
 const Header: React.FC<AuthUserProps> = ({ token, user }) => {
   const { rootFolder, setRootFolder } = useFolderContext()
   const [folder, setFolder] = useState<FolderProps | null>(null)
   const [filteredFolders, setFilteredFolders] = useState<FolderProps[]>([])
   const [filteredFiles, setFilteredFiles] = useState<FileProps[]>([])
+
+  const searchFiles = (files: FileProps[] | undefined, inputValue: string) => {
+    if (files) {
+      const matchingFiles = files.filter(file => file.name.toLowerCase().includes(inputValue))
+      setFilteredFiles(prevFiles => [...prevFiles, ...matchingFiles])
+    }
+  }
 
   const searchRecursive = (folders: FolderProps[] | undefined, inputValue: string): void => {
     if (folders) {
@@ -24,13 +32,6 @@ const Header: React.FC<AuthUserProps> = ({ token, user }) => {
         const nestedFolders = folder.folders
         searchRecursive(nestedFolders, inputValue)
       })
-    }
-  }
-
-  const searchFiles = (files: FileProps[] | undefined, inputValue: string) => {
-    if (files) {
-      const matchingFiles = files.filter(file => file.name.toLowerCase().includes(inputValue))
-      setFilteredFiles(prevFiles => [...prevFiles, ...matchingFiles])
     }
   }
 
@@ -73,10 +74,10 @@ const Header: React.FC<AuthUserProps> = ({ token, user }) => {
   return (
     <Box
       sx={{
-        position: "fixed",
+        position: 'fixed',
         top: 0,
-        left: "50%",
-        transform: "translateX(-50%)",
+        left: '50%',
+        transform: 'translateX(-50%)',
         backgroundColor: 'lightgray',
         px: 1,
         py: 3.5,
@@ -88,7 +89,7 @@ const Header: React.FC<AuthUserProps> = ({ token, user }) => {
     >
       <Box
         sx={{
-          position: "fixed",
+          position: 'fixed',
           top: 0,
           right: 0,
           px: 2,
@@ -99,18 +100,17 @@ const Header: React.FC<AuthUserProps> = ({ token, user }) => {
       </Box>
       <Box
         sx={{
-          position: "fixed",
+          position: 'fixed',
           top: 0,
-          left: "50%",
-          transform: "translateX(-50%)",
+          left: '50%',
+          transform: 'translateX(-50%)',
         }}
       >
-        {
-          token &&
+        {token && (
           <Grid container justifyContent="center" alignItems="center">
             <StyledSearchInput onSearch={handleSearch} />
           </Grid>
-        }
+        )}
       </Box>
     </Box>
   )

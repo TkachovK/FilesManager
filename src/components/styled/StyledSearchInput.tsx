@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import TextField from '@mui/material/TextField'
+
 import { useDebounce } from '../../hooks/useDebounce'
 
 interface SearchInputProps {
@@ -32,7 +33,7 @@ const StyledSearchInput: React.FC<SearchInputProps> = ({ onSearch }) => {
       fullWidth
       value={searchQuery}
       onChange={handleInputChange}
-      size='small'
+      size="small"
       sx={{ mt: 1 }}
       InputProps={{ sx: { borderRadius: 12 } }}
     />

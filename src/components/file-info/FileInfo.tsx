@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
-import { Box, Button, Typography, Paper } from '@mui/material'
+import { Box, Button, Paper, Typography } from '@mui/material'
+
 import { FileInfoProps } from '../../interfaces/folder'
 
 const FileInfo: React.FC<FileInfoProps> = ({ name, filePath, isPublic, showDashboardButton }) => {
@@ -19,7 +20,7 @@ const FileInfo: React.FC<FileInfoProps> = ({ name, filePath, isPublic, showDashb
         width: 1000,
         bgcolor: 'background.paper',
         borderRadius: 5,
-        boxShadow: 24
+        boxShadow: 24,
       }}
     >
       <Paper style={{ padding: '16px', textAlign: 'center' }}>

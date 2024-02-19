@@ -1,8 +1,9 @@
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { Avatar, Box, Button, Tooltip, Typography } from "@mui/material"
-import { User } from "../../interfaces/auth"
-import { useAuth } from "../../providers/auth"
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Avatar, Box, Button, Tooltip, Typography } from '@mui/material'
+
+import { User } from '../../interfaces/auth'
+import { useAuth } from '../../providers/auth'
 
 const UserProfile: React.FC<User> = ({ name, email, avatar }) => {
   const { setToken } = useAuth()
@@ -11,7 +12,7 @@ const UserProfile: React.FC<User> = ({ name, email, avatar }) => {
 
   const handleLogout = () => {
     setToken('')
-    navigate("/", { replace: true })
+    navigate('/', { replace: true })
   }
 
   const handleAvatarClick = () => {
@@ -26,7 +27,7 @@ const UserProfile: React.FC<User> = ({ name, email, avatar }) => {
       disableHoverListener
       disableTouchListener
       title={
-        <Box sx={{ p: 2, maxWidth: 200, display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <Box sx={{ p: 2, maxWidth: 200, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Typography variant="subtitle1">{name}</Typography>
           <Typography variant="body2">{email}</Typography>
           <Box sx={{ mt: 2 }}>

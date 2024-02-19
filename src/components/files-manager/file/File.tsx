@@ -2,25 +2,26 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { InsertDriveFile as FileIcon } from '@mui/icons-material'
 import { Box, Button, Menu, MenuItem, Modal, TextField, Typography } from '@mui/material'
+
 import { AccessLinkProps, FileProps, PermissionsProps, SetFolderRootProps } from '../../../interfaces/folder'
+import { useAuth } from '../../../providers/auth'
+import { cloneFile, deleteFile, renameFile, uploadFiles } from '../../../services/files'
+import { managePermissions } from '../../../services/shared'
+import { SetStateFunction } from '../../../utils/types'
+import FileInfo from '../../file-info/FileInfo'
+import FileUploadForm from '../../styled/StyledFileInput'
 import StyledItemsList from '../../styled/StyledItemsList'
 import StyledModal from '../../styled/StyledModal'
-import { cloneFile, deleteFile, renameFile, uploadFiles } from '../../../services/files'
-import FileUploadForm from '../../styled/StyledFileInput'
-import { SetStateFunction } from '../../../utils/types'
 import StyledPermissionsModal from '../../styled/StyledPermissionsModal'
-import { managePermissions } from '../../../services/shared'
-import { useAuth } from '../../../providers/auth'
-import FileInfo from '../../file-info/FileInfo'
 
 interface FileActions {
   [key: string]: string[]
 }
 
 const fileActions: FileActions = {
-  view: ["View"],
-  edit: ["View", "Clone", "Remove", "Rename"],
-  creator: ["View", "Clone", "Remove", "Rename", "Edit"],
+  view: ['View'],
+  edit: ['View', 'Clone', 'Remove', 'Rename'],
+  creator: ['View', 'Clone', 'Remove', 'Rename', 'Edit'],
 }
 
 const accessLinkDefault: AccessLinkProps = {
@@ -64,16 +65,6 @@ const FileComponent: React.FC<SetFolderRootProps> = ({ rootFolder, setRootFolder
     setIsFileModalOpen(false)
   }
 
-  const handleSaveModal = () => {
-    handleCreateItem(uploadedFiles)
-    handleCloseModal()
-  }
-
-  const handleSaveRenameModal = () => {
-    handleUpdateItem()
-    handleCloseModal()
-  }
-
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFileName(event.target.value)
   }
@@ -98,9 +89,9 @@ const FileComponent: React.FC<SetFolderRootProps> = ({ rootFolder, setRootFolder
   const handleCloneItem = async () => {
     setMenuAnchor(null)
     const data = await cloneFile(selectedItem?.id, rootFolder.id)
-    setRootFolder((prevObject) => ({
+    setRootFolder(prevObject => ({
       ...prevObject,
-      files: [...prevObject?.files ?? [], data],
+      files: [...(prevObject?.files ?? []), data],
     }))
   }
 
@@ -119,7 +110,7 @@ const FileComponent: React.FC<SetFolderRootProps> = ({ rootFolder, setRootFolder
   const removeItem = async () => {
     await deleteFile(selectedItem?.id)
     const updatedFiles = rootFolder?.files?.filter(folder => folder.id !== selectedItem?.id)
-    setRootFolder((prevObject) => ({
+    setRootFolder(prevObject => ({
       ...prevObject,
       files: updatedFiles,
     }))
@@ -132,7 +123,7 @@ const FileComponent: React.FC<SetFolderRootProps> = ({ rootFolder, setRootFolder
     uploadedFiles?.append('isPublic', isPublic.toString())
     user?.email && uploadedFiles?.append('userEmail', user.email.toString())
     const { files } = await uploadFiles(uploadedFiles, rootFolder.id)
-    setRootFolder((prevObject) => ({
+    setRootFolder(prevObject => ({
       ...prevObject,
       files,
     }))
@@ -141,15 +132,15 @@ const FileComponent: React.FC<SetFolderRootProps> = ({ rootFolder, setRootFolder
   const handleUpdateItem = async () => {
     setMenuAnchor(null)
     await renameFile(selectedItem?.id, fileName)
-    setRootFolder((prevObject) => ({
+    setRootFolder(prevObject => ({
       ...prevObject,
-      files: prevObject?.files?.map((file) => file.id === selectedItem?.id ? { ...file, name: fileName } : file),
+      files: prevObject?.files?.map(file => (file.id === selectedItem?.id ? { ...file, name: fileName } : file)),
     }))
   }
 
   const handleEditItem = () => {
     setFileName(selectedItem?.name)
-    setEmailActions([...selectedItem?.permissions ?? []])
+    setEmailActions([...(selectedItem?.permissions ?? [])])
     setAccessLink(selectedItem?.link ?? accessLinkDefault)
     toggleModal(setIsEditModalOpen)
     setMenuAnchor(null)
@@ -161,16 +152,12 @@ const FileComponent: React.FC<SetFolderRootProps> = ({ rootFolder, setRootFolder
       if (response.error) {
         setErrors(response.error)
       } else {
-
         const updatedFile = { ...selectedItem, permissions: [...emailActions] }
-        const prevFiles = [...rootFolder?.files?.filter(file => file.id !== selectedItem?.id) ?? []]
+        const prevFiles = [...(rootFolder?.files?.filter(file => file.id !== selectedItem?.id) ?? [])]
 
-        setRootFolder((prevObject) => ({
+        setRootFolder(prevObject => ({
           ...prevObject,
-          files: [
-            ...prevFiles,
-            updatedFile
-          ],
+          files: [...prevFiles, updatedFile],
         }))
         handleCloseModal()
       }
@@ -184,6 +171,16 @@ const FileComponent: React.FC<SetFolderRootProps> = ({ rootFolder, setRootFolder
     setIsPublic(checked)
   }
 
+  const handleSaveModal = () => {
+    handleCreateItem(uploadedFiles)
+    handleCloseModal()
+  }
+
+  const handleSaveRenameModal = () => {
+    handleUpdateItem()
+    handleCloseModal()
+  }
+
   useEffect(() => {
     if (folderId) {
       user ? setCurrentAction(rootFolder.link?.access) : setCurrentAction('view')
@@ -191,37 +188,33 @@ const FileComponent: React.FC<SetFolderRootProps> = ({ rootFolder, setRootFolder
   }, [folderId, user])
 
   const menuItems = [
-    { label: "View", onClick: handleViewItem },
-    { label: "Clone", onClick: handleCloneItem },
-    { label: "Remove", onClick: handleRemoveItem },
-    { label: "Rename", onClick: handleRenameItem },
-    { label: "Edit", onClick: handleEditItem },
+    { label: 'View', onClick: handleViewItem },
+    { label: 'Clone', onClick: handleCloneItem },
+    { label: 'Remove', onClick: handleRemoveItem },
+    { label: 'Rename', onClick: handleRenameItem },
+    { label: 'Edit', onClick: handleEditItem },
   ]
 
   const getMenuItems = () => {
     const availableActions = currentAction ? fileActions[currentAction] : []
-    return menuItems.filter((item) => availableActions.includes(item.label))
+    return menuItems.filter(item => availableActions.includes(item.label))
   }
 
   return (
-    <Box margin='4rem 8rem'>
-      <Box marginTop='5rem'>
+    <Box margin="4rem 8rem">
+      <Box marginTop="5rem">
         <Typography variant="h4">Files</Typography>
         <StyledItemsList items={rootFolder.files} logo={<FileIcon />} handleItemClick={handleItemClick} />
         {((user && rootFolder.id && currentAction !== 'view') || rootFolder.id === null) && (
-        <Box display="flex" justifyContent="center" sx={{ margin: '0 auto' }}>
-          <Button variant="contained" onClick={() => toggleModal(setIsModalOpen)}>
-            Upload File
-          </Button>
-        </Box>
+          <Box display="flex" justifyContent="center" sx={{ margin: '0 auto' }}>
+            <Button variant="contained" onClick={() => toggleModal(setIsModalOpen)}>
+              Upload File
+            </Button>
+          </Box>
         )}
       </Box>
       <Box>
-        <Menu
-          anchorEl={menuAnchor}
-          open={Boolean(menuAnchor)}
-          onClose={handleCloseMenu}
-        >
+        <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={handleCloseMenu}>
           {getMenuItems().map((item, index) => (
             <MenuItem key={index} onClick={item.onClick}>
               {item.label}
@@ -278,7 +271,7 @@ const FileComponent: React.FC<SetFolderRootProps> = ({ rootFolder, setRootFolder
           onClose={handleCloseModal}
           onSave={removeItem}
           inputComponent={
-            <Typography variant='h5' textAlign='center'>
+            <Typography variant="h5" textAlign="center">
               Are you sure you want to delete {fileName}?
             </Typography>
           }

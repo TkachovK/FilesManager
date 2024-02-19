@@ -1,5 +1,6 @@
-import axios, { AxiosResponse } from "axios"
-import { AccessLinkProps, PermissionsProps } from "../interfaces/folder"
+import axios, { AxiosResponse } from 'axios'
+
+import { AccessLinkProps, PermissionsProps } from '../interfaces/folder'
 
 export const managePermissions = async (
   type: 'folders' | 'files',
@@ -8,7 +9,10 @@ export const managePermissions = async (
   accessLink?: AccessLinkProps
 ) => {
   try {
-    const { data }: AxiosResponse = await axios.post(`${process.env.REACT_APP_API_URL}/${type}/managePermissions/${id}`, { emailActions, accessLink })
+    const { data }: AxiosResponse = await axios.post(
+      `${process.env.REACT_APP_API_URL}/${type}/managePermissions/${id}`,
+      { emailActions, accessLink }
+    )
     return { data }
   } catch (error: any) {
     return { error: error?.response?.data?.errors || ['An unexpected error occurred. Please try again.'] }

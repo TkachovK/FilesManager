@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material"
+import { Box, Button, Typography } from '@mui/material'
 
 const Login: React.FC = () => {
   const handleLogin = () => {
@@ -8,11 +8,11 @@ const Login: React.FC = () => {
   return (
     <Box
       style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100vh',
       }}
     >
       <Typography variant="h4" gutterBottom>
